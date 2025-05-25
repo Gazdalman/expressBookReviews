@@ -1,4 +1,5 @@
 const express = require("express");
+const axios = require("axios");
 let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
@@ -61,5 +62,29 @@ public_users.get("/review/:isbn", function (req, res) {
     return res.status(404).json({ message: "Reviews not found for this book" });
   }
 });
+
+
+async function getBooks() {
+  try {
+    const response = await axios.get('http://localhost:5000/'); // or '/books/' if mounted differently
+    console.log("Books list:", response.data);
+  } catch (error) {
+    console.error("Error fetching books:", error.message);
+  }
+}
+
+getBooks();
+
+
+async function getBookByISBN(isbn) {
+  try {
+    const response = await axios.get(`http://localhost:5000/isbn/${isbn}`);
+    console.log("Book details:", response.data);
+  }
+  catch (error) {
+    console.error("Error fetching book by ISBN:", error.message);
+  }
+}
+getBookByISBN('1');
 
 module.exports.general = public_users;
